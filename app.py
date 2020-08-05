@@ -1,17 +1,32 @@
 import requests
 import json
-access_key = "21dc354c69fd878156565f73dc03638f"
-response = requests.get("http://api.ipstack.com/check?access_key=" + access_key)
+import math
+import config
+
+#################################### Get Latitude and Longitude with IPSTACK API ###############################################
+
+response = requests.get("http://api.ipstack.com/check?access_key=" + config.access_key)
+
 json_response = response.json()
-secret_key = "1a765ec287af0c5b80d9b6a186eb3ee0"
 
 
 
-#http://api.ipstack.com/check? access_key = {location_secret_key}
-#response = requests.get("https://api.openweathermap.org/data/2.5/onecall?lat=33.441792&lon=-94.037689&exclude=hourly,daily&appid={key}")
+long = str(json_response["longitude"])
+lat = str(json_response["latitude"])
+
+################################################################################################################################
 
 
 
-print(json_response["latitude"])
-print(json_response["longitude"])
+weather_response = requests.get("https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + long + "&units=imperial&exclude=hourly,daily&appid=" + config.key)
+json_weather_response = weather_response.json()
+
+whats_the_weather = round(json_weather_response["current"]["temp"])
+feels_like = round(json_weather_response["current"]["feels_like"])
+print(f"Currently the weather is {whats_the_weather}")
+print(f"The real feel is {feels_like} degrees")
+
+
+
+
 
